@@ -23,7 +23,7 @@ export default function Example() {
             resizeMode="contain"
             style={styles.headerImg}
             source={{
-              uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTADVbsUS044JvFpQYmZY0H2fbi-WeNRLltnQ&s",
+              uri: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.instagram.com%2Fhwm.latam%2F&psig=AOvVaw2E9c6RUq8LFFgfSt1MDrgF&ust=1741694013237000&source=images&cd=vfe&opi=89978449&ved=0CBYQjRxqFwoTCIDMhfq5_4sDFQAAAAAdAAAAABAE",
             }}
           />
 
