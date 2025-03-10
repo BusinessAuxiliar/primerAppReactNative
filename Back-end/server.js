@@ -24,7 +24,7 @@ db.connect((err) => {
 });
 
 // 🔑 Endpoint para iniciar sesión
-app.post("/login", (req, res) => {
+app.post("/login", (req, res) => {s
   const { email, password } = req.body;
 
   const query = "SELECT * FROM usuarios WHERE email = ?";
