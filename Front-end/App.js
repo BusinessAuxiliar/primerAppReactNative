@@ -7,13 +7,44 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from "react-native";
 
 export default function Example() {
   const [form, setForm] = useState({
-    email: "",
-    password: "",
+    nombre: "",
+    contraseña: "",
   });
+
+  const handleLogin = async () => {
+    if (!form.nombre || !form.contraseña) {
+      Alert.alert("Error", "Por favor completa todos los campos.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        Alert.alert("✅ Éxito", "Sesión iniciada con éxito.");
+      } else {
+        Alert.alert(
+          "❌ Error",
+          data.message || "Usuario o contraseña incorrectos.",
+        );
+      }
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      Alert.alert("Error", "No se pudo conectar con el servidor.");
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#e8ecf4" }}>
       <View style={styles.container}>
@@ -23,7 +54,7 @@ export default function Example() {
             resizeMode="contain"
             style={styles.headerImg}
             source={{
-              uri: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.instagram.com%2Fhwm.latam%2F&psig=AOvVaw2E9c6RUq8LFFgfSt1MDrgF&ust=1741694013237000&source=images&cd=vfe&opi=89978449&ved=0CBYQjRxqFwoTCIDMhfq5_4sDFQAAAAAdAAAAABAE",
+              uri: "https://www.hwm.com.ar/logo.png",
             }}
           />
 
@@ -38,42 +69,35 @@ export default function Example() {
 
         <View style={styles.form}>
           <View style={styles.input}>
-            <Text style={styles.inputLabel}>Email</Text>
-
+            <Text style={styles.inputLabel}>Nombre</Text>
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
-              keyboardType="email-address"
-              onChangeText={(email) => setForm({ ...form, email })}
-              placeholder="ejemplo@correo.com"
+              onChangeText={(text) => setForm({ ...form, nombre: text })}
+              placeholder="Nombre"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
-              value={form.email}
+              value={form.nombre}
             />
           </View>
 
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Contraseña</Text>
-
             <TextInput
               autoCorrect={false}
               clearButtonMode="while-editing"
-              onChangeText={(password) => setForm({ ...form, password })}
+              onChangeText={(text) => setForm({ ...form, contraseña: text })}
               placeholder="********"
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               secureTextEntry={true}
-              value={form.password}
+              value={form.contraseña}
             />
           </View>
 
           <View style={styles.formAction}>
-            <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-              }}
-            >
+            <TouchableOpacity onPress={handleLogin}>
               <View style={styles.btn}>
                 <Text style={styles.btnText}>Iniciar sesión</Text>
               </View>
@@ -88,7 +112,7 @@ export default function Example() {
 
       <TouchableOpacity onPress={() => {}}>
         <Text style={styles.formFooter}>
-          ¿No tenes cuenta?{" "}
+          ¿No tenés cuenta?{" "}
           <Text style={{ textDecorationLine: "underline" }}>Registrate</Text>
         </Text>
       </TouchableOpacity>
@@ -97,93 +121,29 @@ export default function Example() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    padding: 18,
-  },
-  title: {
-    fontSize: 25,
-    fontWeight: "700",
-    color: "#1D2A32",
-    marginBottom: 3,
-  },
-  subtitle: {
-    fontSize: 15,
-    fontWeight: "500",
-    color: "#929292",
-  },
-  header: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 5,
-  },
-  headerImg: {
-    width: 80,
-    height: 80,
-    alignSelf: "center",
-    marginBottom: 36,
-  },
-  form: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-  },
-  formAction: {
-    marginTop: 2,
-    marginBottom: 16,
-  },
-  formLink: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#075eec",
-    textAlign: "center",
-  },
-  formFooter: {
-    paddingVertical: 50,
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#222",
-    textAlign: "center",
-    letterSpacing: 0.15,
-  },
-  input: {
-    marginBottom: 16,
-  },
-  inputLabel: {
-    fontSize: 17,
-    fontWeight: "600",
-    color: "#222",
-    marginBottom: 8,
-  },
+  container: { flex: 1, padding: 20 },
+  header: { alignItems: "center", marginBottom: 20 },
+  headerImg: { width: 100, height: 100, marginBottom: 10 },
+  title: { fontSize: 24, fontWeight: "bold" },
+  subtitle: { fontSize: 16, color: "#6b7280", textAlign: "center" },
+  form: { marginTop: 20 },
+  input: { marginBottom: 15 },
+  inputLabel: { fontSize: 14, fontWeight: "bold", marginBottom: 5 },
   inputControl: {
-    height: 50,
     backgroundColor: "#fff",
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    fontSize: 15,
-    fontWeight: "500",
-    color: "#222",
+    padding: 10,
+    borderRadius: 5,
     borderWidth: 1,
-    borderColor: "#C9D3DB",
-    borderStyle: "solid",
+    borderColor: "#ccc",
   },
+  formAction: { marginTop: 10 },
   btn: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 30,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderWidth: 1,
     backgroundColor: "#075eec",
-    borderColor: "#075eec",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
   },
-  btnText: {
-    fontSize: 18,
-    lineHeight: 26,
-    fontWeight: "600",
-    color: "#fff",
-  },
+  btnText: { color: "#fff", fontSize: 16 },
+  formLink: { textAlign: "center", color: "#075eec", marginTop: 10 },
+  formFooter: { textAlign: "center", marginTop: 20, color: "#6b7280" },
 });

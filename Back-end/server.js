@@ -1,51 +1,44 @@
+require("dotenv").config();
 const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
-const bcrypt = require("bcrypt");
 
 const app = express();
+app.use(cors());
 app.use(express.json());
-app.use(cors()); // Permitir peticiones desde React Native
 
-// Conectar a MySQL
+// Configurar conexión a MySQL
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",  // Cambia según tu configuración
-  password: "",  // Cambia según tu configuración
-  database: "usuarios",
+    host: "localhost",
+    user: "root",  
+    password: "Disaster2010",  
+    database: "sistema"
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error("Error conectando a MySQL:", err);
-  } else {
-    console.log("Conectado a MySQL ✅");
-  }
-});
-
-// 🔑 Endpoint para iniciar sesión
-app.post("/login", (req, res) => {s
-  const { email, password } = req.body;
-
-  const query = "SELECT * FROM usuarios WHERE email = ?";
-  db.query(query, [email], (err, results) => {
-    if (err) return res.status(500).json({ error: "Error en el servidor" });
-
-    if (results.length > 0) {
-      // Comprobar contraseña
-      bcrypt.compare(password, results[0].password, (err, isMatch) => {
-        if (isMatch) {
-          res.json({ success: true, message: "Login exitoso" });
-        } else {
-          res.json({ success: false, message: "Contraseña incorrecta" });
-        }
-      });
-    } else {
-      res.json({ success: false, message: "Usuario no encontrado" });
+db.connect(err => {
+    if (err) {
+        console.error("Error de conexión:", err);
+        return;
     }
-  });
+    console.log("Conectado a MySQL");
 });
 
-app.listen(3000, () => {
-  console.log("Servidor corriendo en http://localhost:3000");
+// Endpoint para el login
+app.post("/login", (req, res) => {
+    const { usu_nombre, usu_password } = req.body;
+
+    const query = "SELECT * FROM usuarios WHERE usu_nombre = ? AND usu_password = ?";
+    db.query(query, [usu_nombre, usu_password], (err, results) => {
+        if (err) return res.status(500).json({ error: err });
+
+        if (results.length === 0) {
+            return res.json({ success: false, message: "Usuario o contraseña incorrectos" });
+        }
+
+        res.json({ success: true, message: "Login exitoso", user: results[0] });
+    });
+});
+
+app.listen(3001, () => {
+    console.log("Servidor corriendo en el puerto 3001");
 });
