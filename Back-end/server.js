@@ -1,7 +1,8 @@
-const express = require('express');
-const mysql = require('mysql');
-const crypto = require('crypto');
-const cors = require('cors');
+
+import express from "express"; 
+import mysql from'mysql';
+import  crypto  from 'crypto';
+import cors  from 'cors';
 
 const app = express();
 const port = 3001;
