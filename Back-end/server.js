@@ -3,22 +3,22 @@ import express from "express";
 import mysql from'mysql';
 import  crypto  from 'crypto';
 import cors  from 'cors';
+import dotenv from "dotenv"
 
 const app = express();
 const port = 3001;
 
-
+dotenv.config()
 app.use(cors());
 app.use(express.json());
 
 
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Disaster2010',  
-    database: 'sistema'
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
 });
-
 
 connection.connect((err) => {
     if (err) {
