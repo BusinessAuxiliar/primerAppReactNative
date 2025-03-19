@@ -1,21 +1,16 @@
 
 import CryptoJS from "crypto-js";
 import cors  from 'cors';
-
 import { getUserById,
          getEmailById,
          getEmpresaByEmpId
  } from "./app";
-import cors from "cors"; 
 
 const corsOptions = {
     origin: "https://127.0.0.1:5173", // specify the allowed origin 
     methods: ["POST", "GET"],  // specify the allowed methods 
     credentials : true, //allow sending crdentials (cookies, authentication)
 };
-
-
-
 
 
 app.use(cors());
@@ -34,9 +29,6 @@ app.use(express.json());
 //     return encrypted;
 // }
 
-
-
-
 // function desencriptarAES128(textoCifrado, claveSecreta) {
 
 //    claveSecreta = '2lrRKQfHzxACgOG0D1hDDAK3a3b98zfe';
@@ -54,6 +46,18 @@ app.use(express.json());
 //   // Convertimos la salida en texto legible
 //   return decrypted.toString(crypto.enc.Utf8);
 // }
+
+
+app.get('/usuarios/:id', async (req, res) => {
+    const usuario = await getUserById (req.params.id);
+    res.status(200).send(usuario)
+})
+
+app.get('/usuarios/:emp_id', async (req, res) => {
+    
+
+
+})
 
 
 app.post('/login', (req, res) => {
