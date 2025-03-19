@@ -8,7 +8,7 @@ const App = () => {
   const [mensaje, setMensaje] = useState("");
 
   const handleLogin = () => {
-    fetch("http://localhost:3001/login", {
+    fetch("http://localhost:3001/login  ", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

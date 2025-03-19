@@ -1,32 +1,25 @@
-import express from "express"; 
-import mysql from'mysql';
+
 import CryptoJS from "crypto-js";
 import cors  from 'cors';
-import dotenv from "dotenv"
 
-const app = express();
-const port = 3001;
+import { getUserById,
+         getEmailById,
+         getEmpresaByEmpId
+ } from "./app";
+import cors from "cors"; 
 
-dotenv.config()
+const corsOptions = {
+    origin: "https://127.0.0.1:5173", // specify the allowed origin 
+    methods: ["POST", "GET"],  // specify the allowed methods 
+    credentials : true, //allow sending crdentials (cookies, authentication)
+};
+
+
+
+
+
 app.use(cors());
 app.use(express.json());
-
-
-const connection = mysql.createConnection({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
-});
-
-connection.connect((err) => {
-    if (err) {
-        console.error('❌ Error al conectar con MySQL:', err);
-        return;
-    }
-    console.log('✅ Conectado a la base de datos MySQL');
-});
-
 
 // function encryptPassword(password) {
 //     const algorithm = 'aes-128-ecb';  
@@ -84,33 +77,52 @@ app.post('/login', (req, res) => {
         
         const user = results[0];
 
-
-
-
         function desencriptarAES128(textoCifrado) {
 
-            claveSecreta = '2lrRKQfHzxACgOG0D1hDDAK3a3b98zfe';
-            textoCifrado = user.usu_password_encryp;
+            var claveSecreta = '2lrRKQfHzxACgOG0D1hDDAK3a3b98zfe2lrRKQfHzxACgOG0D1hDDAK3a3b98zfe'; // 32 bytes, para AES-128 se toma solo los primeros 16 bytes
+        
+            // Truncamos la clave a 16 bytes para AES-128
+            var claveAES128 = claveSecreta.slice(0, 16);  // Clave de 16 bytes para AES-128
+        
+            // Asegúrate de que el texto cifrado esté en base64
+            var textoCifradoBase64 = CryptoJS.enc.Base64.parse(textoCifrado);
+        
+            // Convertimos la clave secreta en formato UTF-8
+            var key = CryptoJS.enc.Utf8.parse(claveAES128); // Usamos solo los primeros 16 bytes
+        
+            // Desencriptamos el texto cifrado
+            var decrypted = CryptoJS.AES.decrypt(textoCifradoBase64, key, {
+                mode: CryptoJS.mode.ECB,
+                padding: CryptoJS.pad.Pkcs7
+            });
+        
+            // Convertimos la salida en texto legible
+            return decrypted.toString(CryptoJS.enc.Utf8);
+        }
+        // function desencriptarAES128(textoCifrado) {
+
+        //   const  claveSecreta = '2lrRKQfHzxACgOG0D1hDDAK3a3b98zfe';
+        //  textoCifrado = user.usu_password_encryp;
          
-           // Convertimos la clave secreta en formato UTF-8 y luego en una clave de 128 bits
-           var key = CryptoJS.enc.Utf8.parse(claveSecreta);
+        //    // Convertimos la clave secreta en formato UTF-8 y luego en una clave de 128 bits
+        //    const key = CryptoJS.enc.Utf8.parse(claveSecreta);
+            
+        //    // Desencriptamos el texto cifrado
+        //    const decrypted = CryptoJS.AES.decrypt(textoCifrado, key, {
+        //        mode: CryptoJS.mode.ECB,
+        //        padding: CryptoJS.pad.NoPadding // ACA ESTA EL PROBLEMA PKS5PADDING
+        //    });
          
-           // Desencriptamos el texto cifrado
-           var decrypted = CryptoJS.AES.decrypt(textoCifrado, key, {
-               mode: CryptoJS.mode.ECB,
-               padding: CryptoJS.pad.Pkcs7 // ACA ESTA EL PROBLEMA PKS5PADDING
-           });
-         
-           // Convertimos la salida en texto legible
-           return decrypted.toString(CryptoJS.enc.Utf8);
-         }
+        //    // Convertimos la salida en texto legible
+        //    return decrypted.toString(CryptoJS.enc.Utf8);
+        //  }
 
         console.log('Contraseña sin desencriptar', user.usu_password_encryp);
         const contrasenaDesencriptada = desencriptarAES128(user.usu_password_encryp);
 
        
         console.log('Contraseña desencriptada a comparar:', contrasenaDesencriptada);
-        console.log('Contraseña almacenada en BD:', password);
+        console.log('Contraseña ingresada por el usuario:', password);
 
 
         if (contrasenaDesencriptada === password) {
@@ -125,7 +137,3 @@ app.post('/login', (req, res) => {
     });
 });
 
-
-app.listen(port, () => {
-    console.log(`Servidor corriendo en el puerto ${port}`);
-});
