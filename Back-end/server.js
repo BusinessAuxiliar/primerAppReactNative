@@ -3,17 +3,18 @@ import CryptoJS from "crypto-js";
 import cors  from 'cors';
 import { getUserById,
          getEmailById,
-         getEmpresaByEmpId
+         getEmpresaByEmpId,
+         getSucursalById
  } from "./app";
 
-const corsOptions = {
+const corsOption = {
     origin: "https://127.0.0.1:5173", // specify the allowed origin 
     methods: ["POST", "GET"],  // specify the allowed methods 
     credentials : true, //allow sending crdentials (cookies, authentication)
 };
 
 
-app.use(cors());
+app.use(cors(corsOption));
 app.use(express.json());
 
 // function encryptPassword(password) {
@@ -53,12 +54,17 @@ app.get('/usuarios/:id', async (req, res) => {
     res.status(200).send(usuario)
 })
 
-app.get('/usuarios/:emp_id', async (req, res) => {
-    
 
-
+app.get('/login', async (req, res) => {
+const sucursal = await getSucursalById(req.params.suc_id);
+res.status(200).send(sucursal)
 })
 
+
+app.get('/login', async (req, res) => {
+    const empresa = await getEmpresaByEmpId(req.params.emp_id);
+    res.status(200).send(empresa)
+    })
 
 app.post('/login', (req, res) => {
     const { username, password } = req.body;

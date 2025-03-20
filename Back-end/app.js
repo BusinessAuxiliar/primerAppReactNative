@@ -25,10 +25,11 @@ const testConnection = async () => {
         console.error('❌ Error al conectar con MySQL:', err);
     }
 };
-
 testConnection();
 
 export default pool;
+
+
 
 
 export async function getUserById(usu_id){
@@ -49,10 +50,22 @@ return rows  // tomamos varias por eso rows
 }
 
 
+export async function getSucursalById (suc_id) {
+const [row] = await createPool.query(`SELECT sucursales.*
+    FROM usuarios
+    LEFT JOIN sucursales ON usuarios.suc_id = sucursales.suc_id
+    WHERE usuarios.suc_id = ?
+    `, [suc_id] 
+)
+return row[0] // tomo solo la primer columna 
+}
+
+
 export async function getEmailById(usu_id) {
     const [row] = await createPool.query(`SELECT usuarios.usu_email FROM usuarios WHERE id = ?`, [usu_id])
     return row;
 }
+
 
 
 app.listen(port, () => {
