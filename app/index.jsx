@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable prettier/prettier */  
 import React, { useState } from "react";
 import { TextInput, Button, View, Text } from "react-native";
 
