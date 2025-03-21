@@ -1,4 +1,24 @@
 {
+
+
+  "expo": {
+    "name": "Aora",
+    "slug": "aora",
+    "scheme": "aora"
+  
+  },
+  "ios": {
+    "supportsTablet": true
+  },
+  "android": {
+    "adaptativeIcon": {
+      "foregroundImage": "./assets/adaptative-ico.png",
+      "backgroundColor": "#ffffff"
+    }
+  },
+  "web":{
+    "favicon": "./assets/favicon.png"
+  },
   "plugins": [
     "expo-router"
   ]
