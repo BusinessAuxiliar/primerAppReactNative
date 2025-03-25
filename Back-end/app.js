@@ -29,13 +29,13 @@ testConnection();
 
 export default pool;
 
-app.use('/assets/fonts', express.static(__dirname + '/Front-end/assets/fonts', {
-    setHeaders: (res, path) => {
-      if (path.endsWith('.ttf')) {
-        res.setHeader('Content-Type', 'font/ttf');
-      }
-    }
-  }));
+// app.use('/assets/fonts', express.static(__dirname + '/Front-end/assets/fonts', {
+//     setHeaders: (res, path) => {
+//       if (path.endsWith('.ttf')) {
+//         res.setHeader('Content-Type', 'font/ttf');
+//       }
+//     }
+//   }));
 
 
 export async function getUserById(usu_id){

@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { TextInput, Button, View, Text } from "react-native";
 
-
 const Login = () => {
   const [usuario, setUsuario] = useState("");
   const [contrasena, setContrasena] = useState("");
