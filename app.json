@@ -10,7 +10,9 @@
   
   },
   "ios": {
-    "supportsTablet": true
+    "supportsTablet": true,
+    "package": "com.business.growth "
+
   },
   "android": {
     "adaptativeIcon": {
